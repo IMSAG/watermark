@@ -58,7 +58,7 @@ public class FileCopyWithWatermarkAction implements CopyAction {
 		try {
 			String fileName = sourceImageFile.getName();
 			String format = fileName.substring(fileName.lastIndexOf(".") + 1);
-			System.out.println("Add watermark to file " + fileName + " " + format);
+			System.out.println("Add watermark to file " + fileName);
 			BufferedImage sourceImage = ImageIO.read(sourceImageFile);
 			Graphics2D g2d = (Graphics2D) sourceImage.getGraphics();
 			// initializes necessary graphic properties
