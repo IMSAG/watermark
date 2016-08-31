@@ -15,6 +15,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * Created by mfr on 21.01.2016.
@@ -26,13 +27,15 @@ public class FileCopyWithWatermarkAction implements CopyAction {
 	private final String color;
 	private final int size;
 	private final int rotate;
+	private final BigDecimal opacity;
 
-	public FileCopyWithWatermarkAction(String text, int size, String color, int rotate, FileResolver fileResolver) {
+	public FileCopyWithWatermarkAction(String text, int size, String color, int rotate, BigDecimal opacity, FileResolver fileResolver) {
 		this.fileResolver = fileResolver;
 		this.text = text;
 		this.size = size;
 		this.color = color;
 		this.rotate = rotate;
+		this.opacity = opacity;
 	}
 
 	public WorkResult execute(CopyActionProcessingStream stream) {
@@ -62,7 +65,7 @@ public class FileCopyWithWatermarkAction implements CopyAction {
 			BufferedImage sourceImage = ImageIO.read(sourceImageFile);
 			Graphics2D g2d = (Graphics2D) sourceImage.getGraphics();
 			// initializes necessary graphic properties
-			AlphaComposite alphaChannel = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
+			AlphaComposite alphaChannel = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity.floatValue());
 			g2d.setComposite(alphaChannel);
 			AffineTransform orig = g2d.getTransform();
 			g2d.setColor(Color.decode(color));

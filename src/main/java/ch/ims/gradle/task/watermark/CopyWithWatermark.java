@@ -7,6 +7,7 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.ParallelizableTask;
 
 import java.io.File;
+import java.math.BigDecimal;
 
 /**
  * Created by mfr on 21.01.2016.
@@ -18,6 +19,7 @@ public class CopyWithWatermark extends Copy {
 	private int size = 50;
 	private String color = "#000000";
 	private int rotate = 0;
+	private BigDecimal opacity = new BigDecimal(0.3);
 
 
 	@Input
@@ -40,13 +42,18 @@ public class CopyWithWatermark extends Copy {
 		this.rotate = rotate;
 	}
 
+	@Input
+	public void setOpacity(BigDecimal opacity) {
+		this.opacity = opacity;
+	}
+
 	@Override
 	protected CopyAction createCopyAction() {
 		File destinationDir = getDestinationDir();
 		if (destinationDir == null) {
 			throw new InvalidUserDataException("No copy destination directory has been specified, use 'into' to specify a target directory.");
 		}
-		return new FileCopyWithWatermarkAction(text, size, color, rotate, getFileLookup().getFileResolver(destinationDir));
+		return new FileCopyWithWatermarkAction(text, size, color, rotate, opacity, getFileLookup().getFileResolver(destinationDir));
 	}
 
 }
