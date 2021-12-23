@@ -5,8 +5,8 @@ import org.gradle.api.internal.file.FileResolver;
 import org.gradle.api.internal.file.copy.CopyAction;
 import org.gradle.api.internal.file.copy.CopyActionProcessingStream;
 import org.gradle.api.internal.file.copy.FileCopyDetailsInternal;
-import org.gradle.api.internal.tasks.SimpleWorkResult;
 import org.gradle.api.tasks.WorkResult;
+import org.gradle.api.tasks.WorkResults;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -41,19 +41,16 @@ public class FileCopyWithWatermarkAction implements CopyAction {
 	public WorkResult execute(CopyActionProcessingStream stream) {
 		FileCopyWithWatermarkAction.FileCopyDetailsInternalAction action = new FileCopyWithWatermarkAction.FileCopyDetailsInternalAction();
 		stream.process(action);
-		return new SimpleWorkResult(action.didWork);
+		return WorkResults.didWork(true);
 	}
 
 	private class FileCopyDetailsInternalAction implements CopyActionProcessingStreamAction {
-		private boolean didWork;
-
 		private FileCopyDetailsInternalAction() {
 		}
 
 		public void processFile(FileCopyDetailsInternal details) {
 			File target = FileCopyWithWatermarkAction.this.fileResolver.resolve(details.getRelativePath().getPathString());
 			addTextWatermark(details.getFile(),target);
-			this.didWork = true;
 		}
 	}
 
