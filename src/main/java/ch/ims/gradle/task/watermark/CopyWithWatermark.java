@@ -1,9 +1,9 @@
 package ch.ims.gradle.task.watermark;
 
-import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.internal.file.copy.CopyAction;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.Input;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -13,44 +13,40 @@ import java.math.BigDecimal;
  */
 public class CopyWithWatermark extends Copy {
 
-	private String text = "MARK";
-	private int size = 50;
-	private String color = "#000000";
-	private int rotate = 0;
-	private BigDecimal opacity = BigDecimal.valueOf(0.3);
-
-
 	@Input
-	public void setText(String text){
-		this.text = text;
+	public String text = "MARK";
+	@Input
+	public int size = 50;
+	@Input
+	public String color = "#000000";
+	@Input
+	public int rotate = 0;
+	@Input
+	public BigDecimal opacity = BigDecimal.valueOf(0.3);
+
+	public String getText() {
+		return text;
 	}
 
-	@Input
-	public void setSize(int size) {
-		this.size = size;
+	public int getSize() {
+		return size;
 	}
 
-	@Input
-	public void setColor(String color) {
-		this.color = color;
+	public String getColor() {
+		return color;
 	}
 
-	@Input
-	public void setRotate(int rotate) {
-		this.rotate = rotate;
+	public int getRotate() {
+		return rotate;
 	}
 
-	@Input
-	public void setOpacity(BigDecimal opacity) {
-		this.opacity = opacity;
+	public BigDecimal getOpacity() {
+		return opacity;
 	}
 
 	@Override
-	protected CopyAction createCopyAction() {
+	protected @NotNull CopyAction createCopyAction() {
 		File destinationDir = getDestinationDir();
-		if (destinationDir == null) {
-			throw new InvalidUserDataException("No copy destination directory has been specified, use 'into' to specify a target directory.");
-		}
 		return new FileCopyWithWatermarkAction(text, size, color, rotate, opacity, getFileLookup().getFileResolver(destinationDir));
 	}
 

@@ -61,6 +61,12 @@ public class FileCopyWithWatermarkAction implements CopyAction {
 			System.out.println("Add watermark to file " + fileName);
 			BufferedImage sourceImage = ImageIO.read(sourceImageFile);
 			Graphics2D g2d = (Graphics2D) sourceImage.getGraphics();
+
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
 			// initializes necessary graphic properties
 			AlphaComposite alphaChannel = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity.floatValue());
 			g2d.setComposite(alphaChannel);
@@ -71,10 +77,13 @@ public class FileCopyWithWatermarkAction implements CopyAction {
 			Rectangle2D rect = fontMetrics.getStringBounds(text, g2d);
 			// calculates the coordinate where the String is painted
 			int centerX = (sourceImage.getWidth() - (int) rect.getWidth()) / 2;
-			int centerY = (sourceImage.getHeight() + (int) ( rect.getHeight() / 2)) / 2;
-			g2d.rotate(Math.toRadians(rotate),(sourceImage.getWidth() / 2), (sourceImage.getHeight() / 2));
+			int centerY = (sourceImage.getHeight() + (int) (rect.getHeight() / 2)) / 2;
+
+			// rotate the watermark
+			g2d.rotate(Math.toRadians(rotate), (sourceImage.getWidth() / 2), (sourceImage.getHeight() / 2));
+
 			// paints the textual watermark
-			g2d.drawString(text, centerX,centerY);
+			g2d.drawString(text, centerX, centerY);
 			g2d.setTransform(orig);
 			ImageIO.write(sourceImage, format, destImageFile);
 			g2d.dispose();
